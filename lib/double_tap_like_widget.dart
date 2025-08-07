@@ -19,6 +19,7 @@ class DoubleTapLikeWidget extends StatefulWidget {
     this.curve = Curves.easeInOutCubic,
     this.likeWidth = 200,
     this.likeHeight = 200,
+    this.likeCenterPosition = false,
   });
 
   final ValueChanged<int> onLike;
@@ -30,6 +31,7 @@ class DoubleTapLikeWidget extends StatefulWidget {
   final Curve curve;
   final double likeWidth;
   final double likeHeight;
+  final bool likeCenterPosition;
 
   @override
   State createState() => _DoubleTapLikeWidgetState();
@@ -52,10 +54,21 @@ class _DoubleTapLikeWidgetState extends State<DoubleTapLikeWidget> {
         ),
         ...hearts.map(
           (e) {
+            double startPosition;
+            double topPosition;
+
+            if (widget.likeCenterPosition) {
+              var size = MediaQuery.of(context).size;
+              startPosition = (size.width / 2) - widget.likeWidth / 2;
+              topPosition = (size.height / 2) - widget.likeHeight / 1.3;
+            } else {
+              startPosition = e.x - widget.likeWidth / 2;
+              topPosition = e.y - widget.likeHeight / 1.3;
+            }
             return PositionedDirectional(
               key: ValueKey(e),
-              start: e.x - widget.likeWidth / 2,
-              top: e.y - widget.likeHeight / 1.3,
+              start: startPosition,
+              top: topPosition,
               child: _AnimatedTranslateWidget(
                 translateDuration: widget.translateDuration,
                 curve: widget.curve,
@@ -63,6 +76,7 @@ class _DoubleTapLikeWidgetState extends State<DoubleTapLikeWidget> {
                   animationDuration: widget.animationDuration,
                   width: widget.likeWidth,
                   height: widget.likeHeight,
+                  likeCenterPosition: widget.likeCenterPosition,
                   child: widget.likeWidget,
                 ),
                 onDispose: () {

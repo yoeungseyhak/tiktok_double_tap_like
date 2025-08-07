@@ -8,12 +8,14 @@ class _LikeWidget extends StatefulWidget {
     required this.height,
     required this.child,
     this.animationDuration = const Duration(milliseconds: 950),
+    this.likeCenterPosition = false,
   });
 
   final Duration animationDuration;
   final double width;
   final double height;
   final Widget child;
+  final bool likeCenterPosition;
 
   @override
   State createState() => _LikeWidgetState();
@@ -116,14 +118,22 @@ class _LikeWidgetState extends State<_LikeWidget>
           ),
         );
       },
-      child: Transform.rotate(
-        angle: angle,
-        child: SizedBox(
-          width: widget.width,
-          height: widget.height,
-          child: widget.child,
-        ),
-      ),
+      child: _rotate(),
+    );
+  }
+
+  Widget _rotate() {
+    Widget w = SizedBox(
+      width: widget.width,
+      height: widget.height,
+      child: widget.child,
+    );
+    if (widget.likeCenterPosition) {
+      return w;
+    }
+    return Transform.rotate(
+      angle: angle,
+      child: w,
     );
   }
 }
